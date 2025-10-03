@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
             // $time_keeper = new TimeKeeper();
              $service = app(ReminderService::class);
             $service->run();
-        })->dailyAt('07:30');
+        })->dailyAt('7:30');
     }
 
     /**
