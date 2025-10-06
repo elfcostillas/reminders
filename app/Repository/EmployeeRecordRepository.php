@@ -15,6 +15,7 @@ class EmployeeRecordRepository
                         concat('+63',RIGHT(LPAD(REPLACE(REPLACE(contact_no, '-', ''), ' ', ''), 11, 0),10)) as ph_format,
                         concat(lastname,', ',firstname) as emp_name"))
                     ->where('exit_status',1)
+                    ->where('biometric_id','!=',1)
                     ->where('contact_no','!=','');
         return $collection;    
     }
