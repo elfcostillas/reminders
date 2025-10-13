@@ -21,8 +21,8 @@ class DailyTimeRecordRepository
             ->where(function($query){
                 $query->orWhere('time_in','=','');
                 $query->orWhere('time_out','=','');
-                $query->orWhereNull('time_out','=','');
-                $query->orWhereNull('time_out','=','');
+                $query->orWhereNull('time_in');
+                $query->orWhereNull('time_out');
             });
 
         return $logs

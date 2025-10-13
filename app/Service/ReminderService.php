@@ -41,31 +41,28 @@ class ReminderService
             {
                
                 // dd($incoplete_log->dtr_date);
-
-                $date = Carbon::createFromFormat('Y-m-d',$incoplete_log->dtr_date);
-
-                
-                $msg = $this->msg_factory($incoplete_log);
-                $title = $this->title_factory($incoplete_log);
+                if (($yesterday->shortEnglishDayOfWeek != 'Sat') || $yesterday->shortEnglishDayOfWeek == 'Sat' && ($incoplete_log->schedule_id != 0 && !is_null($incoplete_log->schedule_id))) {
                
-                $msg_object = [
-                    'biometric_id' => $this->employeeArray[$incoplete_log->biometric_id]->biometric_id,
-                    'employee_name' => $this->employeeArray[$incoplete_log->biometric_id]->emp_name,
-                    'contact_no' => $this->employeeArray[$incoplete_log->biometric_id]->ph_format,
-                    'msg' => $msg,
-                    'created_on' => now(),
-                    'work_date' => $incoplete_log->dtr_date,
-                    'work_date_f' => $date->format('m/d/Y'),
-                    'title' => $title
-                ];
 
-    //                 +"biometric_id": 158
-    // +"contact_no": "0926-732-8311"
-    // +"format_contact": "09267328311"
-    // +"ph_format": "+639267328311"
-    // +"emp_name": "Abalorio, Egllen"
+                    $date = Carbon::createFromFormat('Y-m-d',$incoplete_log->dtr_date);
 
-                array_push($to_send,$msg_object);
+                    
+                    $msg = $this->msg_factory($incoplete_log);
+                    $title = $this->title_factory($incoplete_log);
+                
+                    $msg_object = [
+                        'biometric_id' => $this->employeeArray[$incoplete_log->biometric_id]->biometric_id,
+                        'employee_name' => $this->employeeArray[$incoplete_log->biometric_id]->emp_name,
+                        'contact_no' => $this->employeeArray[$incoplete_log->biometric_id]->ph_format,
+                        'msg' => $msg,
+                        'created_on' => now(),
+                        'work_date' => $incoplete_log->dtr_date,
+                        'work_date_f' => $date->format('m/d/Y'),
+                        'title' => $title
+                    ];
+
+                    array_push($to_send,$msg_object);
+                }
             }
 
         
@@ -114,7 +111,7 @@ class ReminderService
 
         if(!$this->noTimeIn($log_object) && $this->noTimeOut($log_object))
         {
-            $msg = 'no time timeout';
+            $msg = 'no timeout';
         }
 
         return $msg;
@@ -129,9 +126,9 @@ class ReminderService
         {
             // $msg = "This is to inform you that the system has detected that you have failed to clock-in and clock-out last {$date->format('m/d/Y')}.";
            
-            $msg = "Subject: Missed Clock-In and Out Notification – Action Required
+            $msg = "Subject: Missed Clock-In and Out Notification–Action Required
 
-                This is to inform you that the system has detected a missed clock-in and out on 09/18/2025. Please submit FTP (Failure to Punch) or Leave form within 24 to 48 hours upon receiving this message, and forward it to the HR Office or your designated department representative.
+                This is to inform you that the system has detected a missed clock-in and out on {$date->format('m/d/Y')}. Please submit FTP (Failure to Punch) or Leave form within 24 to 48 hours upon receiving this message, and forward it to the HR Office or your designated department representative.
 
                 Note: This is a system-generated message. Please do not reply.";
         }
@@ -140,7 +137,7 @@ class ReminderService
         {
             // $msg = "This is to inform you that the system has detected that you have failed to clock-in last {$date->format('m/d/Y')}.";
 
-            $msg = "Subject: Missed Clock-In Notification – Action Required
+            $msg = "Subject: Missed Clock-In and Out Notification–Action Required
 
                     This is to inform you that the system has detected a missed clock-in on {$date->format('m/d/Y')}. Please submit FTP (Failure to Punch) form within 24 to 48 hours upon receiving this message, and forward it to the HR Office or your designated department representative.
 
@@ -150,7 +147,7 @@ class ReminderService
         if(!$this->noTimeIn($log_object) && $this->noTimeOut($log_object))
         {
             // $msg = "This is to inform you that the system has detected that you have failed to clock-out last {$date->format('m/d/Y')}.";
-            $msg = "Subject: Missed Clock-Out Notification – Action Required
+            $msg = "Subject: Missed Clock-In and Out Notification–Action Required
 
                     This is to inform you that the system has detected a missed clock-out on {$date->format('m/d/Y')}. Please submit FTP (Failure to Punch) form within 24 to 48 hours upon receiving this message, and forward it to the HR Office or your designated department representative.
 
